@@ -225,48 +225,78 @@ switch (req.url) {
 
 }).listen(4545); */
 
-const http = require ('http');
-const url = require ('url');
-const fs = require ('fs');
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
 
-const sendData = (filName, res) => {
-    fs.readFile(`${filName}.html`, 'utf-8', (err, data)=>{
-        if(err) {
-            if (err.code === 'ENOENT'){
-                //tnayin
-            }
-        }  else {
-            res.write(data);
+
+
+const sendData = (fileName, res, err) => {
+
+   
+     fs.readFile(`${fileName}.html`, 'utf-8', (err, data) => {
+      if (err) {
+      
+         if (err.code === 'ENOENT'){
+        
+            throw  err;
+            
+        }
+        if (err.code === 'EEXIST'){
+            throw err;
         }
 
-        res.end()
-    })
+        if (err.code === 'EISDIR'){
+            throw err;
+        }
+        if (err.code === 'ENOTDIR'){
+            throw err;
+        }
+        if (err.code === 'EMFILE'){
+            throw err;
+        }
+
+    }
+        
+     else{  res.write(data);
+        res.end();
+     }
+   
+})
 }
 
 http.createServer((req, res) => {
     res.writeHead(200);
 
-    const {query:{page} } = url.parse (req.url, true);
+    const { query: { page } } = url.parse(req.url, true);
     
-switch (page) {
-    case 'home':
-        sendData ('index', res);
+    switch(page) {
+        case 'home':
+            sendData('index', res);
         break;
         case 'contact':
-        sendData ('contact', res);
+             sendData('contact', res);
         break;
         case 'news':
-        sendData ('news', res);
-        break;
-        default: sendData('404', res)
-}
+             sendData('new', res);
+         break;
+        default: sendData('404', res);
+         break;
+    }
     
-
-}).listen(8080)
-
+}).listen(4546);
 
 
+// git config --global user.name "name"
+// git config --global user.email "email"
 
 
 
 
+
+
+
+// http://localhost:8080/?page=home - home page
+// http://localhost:8080/?page=contact - contact page
+// http://localhost:8080/?page=news - news page
+// http://localhost:8080/?page=dfgsrdtgs - 404 page
