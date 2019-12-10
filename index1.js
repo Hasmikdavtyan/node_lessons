@@ -4,7 +4,14 @@ const fs = require('fs');
 const url = require('url');
 
 
-
+/**
+ *  function sendDataother 
+ * send html data to clinet
+ * 
+ * @param {object} res - response object
+ * @param {object} err - errors
+ * @param {String} fileName  - our name of files
+ */
 
 const sendData = (fileName, res, err) => {
 
